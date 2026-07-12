@@ -17,7 +17,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://api.the-odds-api.com/v4/sports/${encodeURIComponent(sport)}/odds/?apiKey=${apiKey}&regions=eu,uk&markets=h2h&oddsFormat=decimal`;
+    // 3 mercados (h2h, totals, btts) x 2 regiões (eu, uk) = 6 créditos por chamada.
+    // Com o cache de 2 minutos abaixo, seus 500 créditos/mês rendem bastante.
+    const url = `https://api.the-odds-api.com/v4/sports/${encodeURIComponent(sport)}/odds/?apiKey=${apiKey}&regions=eu,uk&markets=h2h,totals,btts&oddsFormat=decimal`;
     const upstream = await fetch(url);
     const remaining = upstream.headers.get("x-requests-remaining");
     const used = upstream.headers.get("x-requests-used");
